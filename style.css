@@ -191,6 +191,13 @@ input:focus, select:focus { outline: 2px solid var(--cyan); outline-offset: 1px;
 .join-grid { display: grid; grid-template-columns: 1.3fr 1.3fr auto; gap: 0.75rem; align-items: end; }
 
 /* Matrix */
+.panel-head { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; align-items: center; justify-content: space-between; margin-bottom: 0.9rem; }
+.panel-head h2 { margin: 0; }
+.btn[aria-pressed="true"] { border-color: var(--gold); color: var(--gold-bright); }
+
+/* Full width: stretch past main's max-width to the window edges, keeping the 16px gutter. */
+.panel.wide { margin-inline: calc(50% - (100vw - var(--scrollbar, 0px)) / 2 + 16px); }
+
 .matrix-wrap { overflow-x: auto; margin: 0 -0.25rem; padding: 0 0.25rem 0.25rem; }
 table.matrix { border-collapse: separate; border-spacing: 3px; width: 100%; min-width: max-content; }
 .matrix th { font-size: 0.6rem; font-weight: 400; color: var(--muted); text-transform: uppercase; padding: 0.25rem; white-space: nowrap; }

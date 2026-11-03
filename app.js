@@ -183,6 +183,17 @@ let store;
 let unsub = [];
 let state = { id: null, game: null, players: [], editing: null };
 
+// Per-browser preference for stretching the availability panel to the window width.
+let wideMatrix = false;
+try { wideMatrix = localStorage.getItem("ti-sched:wide") === "1"; } catch {}
+
+// Full width is measured without the scrollbar, so the panel never causes sideways page scroll.
+function updateScrollbarWidth() {
+  document.documentElement.style.setProperty(
+    "--scrollbar", `${window.innerWidth - document.documentElement.clientWidth}px`);
+}
+window.addEventListener("resize", updateScrollbarWidth);
+
 async function boot() {
   const cfg = window.FIREBASE_CONFIG;
   if (cfg) {
@@ -258,17 +269,29 @@ function render() {
   const form = $("#join-form");
   const draft = form ? { name: form.name.value, faction: form.faction.value } : null;
   const focusedId = document.activeElement?.dataset?.focusKey;
+  // Redrawing replaces the table, so carry its sideways scroll over. The summary above it
+  // can change height, so also keep the table at the same spot on screen.
+  const oldWrap = $(".matrix-wrap");
+  const tableScroll = oldWrap?.scrollLeft ?? 0;
+  const tableTop = oldWrap?.getBoundingClientRect().top;
 
   const weekends = weekendsFor(state.game);
   const sum = summarise(weekends, state.players);
   app.innerHTML = headerHTML(weekends) + verdictHTML(sum) + joinHTML() + matrixHTML(weekends, sum);
+  updateScrollbarWidth();
+
+  const wrap = $(".matrix-wrap");
+  if (wrap) {
+    wrap.scrollLeft = tableScroll;
+    if (tableTop !== undefined) window.scrollBy(0, wrap.getBoundingClientRect().top - tableTop);
+  }
 
   if (draft && !state.editingJustSet) {
     const f = $("#join-form");
     f.name.value = draft.name; f.faction.value = draft.faction;
   }
   state.editingJustSet = false;
-  if (focusedId) document.querySelector(`[data-focus-key="${focusedId}"]`)?.focus();
+  if (focusedId) document.querySelector(`[data-focus-key="${focusedId}"]`)?.focus({ preventScroll: true });
   bind();
 }
 
@@ -414,8 +437,13 @@ function matrixHTML(weekends, sum) {
   }).join("");
 
   return `
-    <section class="panel">
-      <h2>Availability</h2>
+    <section class="panel${wideMatrix ? " wide" : ""}">
+      <div class="panel-head">
+        <h2>Availability</h2>
+        <button class="btn small ghost" id="wide-btn" type="button" aria-pressed="${wideMatrix}">
+          ${wideMatrix ? "⇥⇤ Standard width" : "⇤⇥ Full width"}
+        </button>
+      </div>
       ${n === 0 ? '<p class="empty-state">No players yet. Join the Council above, then click the days you can play.</p>' : `
       <div class="matrix-wrap">
         <table class="matrix">
@@ -441,6 +469,13 @@ function bind() {
   $("#share-btn")?.addEventListener("click", async () => {
     try { await navigator.clipboard.writeText(location.href); toast("Invite link copied."); }
     catch { prompt("Copy this link:", location.href); }
+  });
+
+  $("#wide-btn")?.addEventListener("click", () => {
+    wideMatrix = !wideMatrix;
+    try { localStorage.setItem("ti-sched:wide", wideMatrix ? "1" : "0"); } catch {}
+    render();
+    $("#wide-btn")?.focus({ preventScroll: true });
   });
 
   $("#extend-btn")?.addEventListener("click", () => {
