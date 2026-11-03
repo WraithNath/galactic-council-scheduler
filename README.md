@@ -18,15 +18,17 @@ git clone https://github.com/WraithNath/galactic-council-scheduler.git
 cd galactic-council-scheduler
 ```
 
-### 2. Create your config file
+### 2. Set your config file
 
-`config.js` holds your Firebase settings and is not committed (see `.gitignore`). Create it from the template:
+`config.js` holds the Firebase settings. The one in this repo points at the Firebase project behind the live site. To use your own Firebase project, or none at all, replace it with the template:
 
 ```bash
 cp config.example.js config.js
 ```
 
 If you leave `window.FIREBASE_CONFIG = null`, the app runs in **local-only mode**, where games are saved in your browser only. That is fine for trying it out. To share games with other players, set up Firebase (below) and paste your settings in.
+
+The Firebase web config is designed to be public. It only identifies the project, and access is controlled by the Firestore rules.
 
 ### 3. Run it locally
 
@@ -70,7 +72,7 @@ The site is just four files: `index.html`, `style.css`, `app.js` and `config.js`
 2. Go to <https://app.netlify.com/drop> and drag the folder onto the page. You get a public URL straight away. Sign in to a free account to keep the site permanently.
 
 **GitHub Pages**
-GitHub Pages serves what is in the repository, and `config.js` is git-ignored. To use Pages, either commit `config.js` to a separate deployment branch, or remove it from `.gitignore`. The Firebase web config is designed to be public: it only identifies your project, and access is controlled by the Firestore rules. Then open **Settings → Pages**, set **Source** to *Deploy from a branch*, and choose the branch and `/ (root)`.
+Commit your `config.js`, then open **Settings → Pages**, set **Source** to *Deploy from a branch*, and choose `main` and `/ (root)`. The site appears at `https://<username>.github.io/<repo-name>/` after a minute or so, and redeploys on every push.
 
 **Firebase Hosting** also works on the free plan (`npm i -g firebase-tools`, `firebase init hosting`, `firebase deploy`).
 

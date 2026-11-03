@@ -1,6 +1,3 @@
-# Local Firebase config (copy config.example.js to create it)
-config.js
-
 # Local tooling
 .claude/
 node_modules/
