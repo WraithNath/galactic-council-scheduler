@@ -1,0 +1,22 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Anyone with a game link can read and edit that game. Game IDs are random,
+    // so a game is only reachable by people you share the link with.
+    match /games/{gameId} {
+      allow get: if true;
+      allow create, update: if request.resource.data.title is string
+                            && request.resource.data.title.size() <= 60
+                            && request.resource.data.weeks is int
+                            && request.resource.data.weeks <= 52;
+
+      match /players/{playerId} {
+        allow read: if true;
+        allow create, update: if request.resource.data.name is string
+                              && request.resource.data.name.size() <= 30
+                              && request.resource.data.id == playerId;
+        allow delete: if true;
+      }
+    }
+  }
+}

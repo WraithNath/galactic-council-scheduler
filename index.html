@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Galactic Council Scheduler</title>
+  <meta name="description" content="Find a weekend everyone can make for a game of Twilight Imperium.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50,4 90,27 90,73 50,96 10,73 10,27' fill='%2305070f' stroke='%23d4a84b' stroke-width='6'/%3E%3Ccircle cx='50' cy='50' r='14' fill='%23d4a84b'/%3E%3C/svg%3E">
+</head>
+<body>
+  <div class="stars" aria-hidden="true"></div>
+
+  <header class="masthead">
+    <svg class="emblem" viewBox="0 0 100 100" aria-hidden="true">
+      <polygon points="50,4 90,27 90,73 50,96 10,73 10,27" class="hex-outer"/>
+      <polygon points="50,18 78,34 78,66 50,82 22,66 22,34" class="hex-inner"/>
+      <circle cx="50" cy="50" r="11" class="core"/>
+      <circle cx="50" cy="50" r="20" class="orbit"/>
+    </svg>
+    <div>
+      <p class="eyebrow">Twilight Imperium · Weekend Scheduler</p>
+      <h1>Galactic Council Scheduler</h1>
+      <p class="tagline">The throne of Mecatol Rex sits empty. Find the weekend when every faction can take its seat.</p>
+    </div>
+  </header>
+
+  <div id="mode-banner" class="banner" hidden></div>
+
+  <main id="app"></main>
+
+  <footer class="foot">
+    An unofficial fan-made tool. Not affiliated with Fantasy Flight Games.
+  </footer>
+
+  <template id="tpl-landing">
+    <section class="panel landing">
+      <h2>Convene a New Council</h2>
+      <p class="muted">Create a game, then share the link with your players. Each player adds themselves and marks the weekends they can make.</p>
+      <form id="create-form" class="stack">
+        <label>Game name
+          <input name="title" required maxlength="60" placeholder="e.g. Prophecy of Kings, 8-player">
+        </label>
+        <div class="row-2">
+          <label>First weekend
+            <input name="start" type="date" required>
+          </label>
+          <label>Number of weekends
+            <input name="weeks" type="number" min="1" max="26" value="12" required>
+          </label>
+        </div>
+        <button class="btn primary" type="submit">Convene the Council</button>
+      </form>
+    </section>
+  </template>
+
+  <script src="config.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
